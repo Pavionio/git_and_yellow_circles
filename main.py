@@ -1,16 +1,38 @@
-# This is a sample Python script.
+import sys
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from PyQt5 import uic  # Импортируем uic
+from PyQt5.QtGui import QPainter, QColor
+from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow
+from random import randint
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-    print(1)
+class MyWidget(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('UI.ui', self)
+        self.flag = False
+        self.pushButton.clicked.connect(self.drawf)
+    def drawf(self):
+        self.flag = True
+        self.update()
 
-# Press the green button in the gutter to run the script.
+    def paintEvent(self, event):
+        if self.flag:
+            self.qp = QPainter()
+            self.qp.begin(self)
+            self.draw()
+            self.qp.end()
+
+    def draw(self):
+        x, y = randint(0, self.width()), randint(0, self.height())
+        radius = randint(0, 100)
+        r, g, b = 255, 255, 0
+        self.qp.setBrush(QColor(r, g, b))
+        self.qp.drawEllipse(x, y, radius, radius)
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    app = QApplication(sys.argv)
+    ex = MyWidget()
+    ex.show()
+    sys.exit(app.exec_())
